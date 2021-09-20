@@ -1,7 +1,13 @@
 import pytest
-from src.recommendations import sim_distance
+import numpy as np
+from src.recommendations import distance_euclidean
 
-def test_sim_distance():
-    v1 = np.array([1,2])
-    v2 = np.array([1,2])
-    assert sim_distance(v1, v2) == 0
+
+@pytest.mark.parametrize('v1,v2,expected', [
+    (np.array([1, 2]), np.array([1, 2]), 0),
+    (np.array([0, 0]), np.array([1, 1]), np.sqrt(2)),
+    (np.array([0, 0]), np.array([3, 4]), 5),
+    (np.array([1]), np.array([2]), 1),
+])
+def test_distance_euclidean(v1, v2, expected):
+    assert distance_euclidean(v1, v2) == expected
