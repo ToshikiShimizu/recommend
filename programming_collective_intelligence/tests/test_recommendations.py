@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from src.recommendations import distance_euclidean, sim_distance_euclidean
+from recommendations import distance_euclidean, sim_distance_euclidean
 
 
 @pytest.mark.parametrize('v1,v2,expected', [
