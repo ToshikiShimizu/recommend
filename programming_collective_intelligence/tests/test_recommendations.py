@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from recommendations import distance_euclidean, sim_distance_euclidean
+import recommendations
 
 
 @pytest.mark.parametrize('v1,v2,expected', [
@@ -10,7 +10,7 @@ from recommendations import distance_euclidean, sim_distance_euclidean
     (np.array([1]), np.array([2]), 1),
 ])
 def test_distance_euclidean(v1, v2, expected):
-    assert distance_euclidean(v1, v2) == expected
+    assert recommendations.distance_euclidean(v1, v2) == expected
 
 
 @pytest.mark.parametrize('v1,v2,expected', [
@@ -20,4 +20,14 @@ def test_distance_euclidean(v1, v2, expected):
     (np.array([1]), np.array([2]), 1/2),
 ])
 def test_sim_distance_euclidean(v1, v2, expected):
-    assert sim_distance_euclidean(v1, v2) == expected
+    assert recommendations.sim_distance_euclidean(v1, v2) == expected
+
+
+def test_load_critics():
+    critics_matrix, user_dic, item_dic = recommendations.load_critics()
+    assert critics_matrix.shape[0] == len(user_dic)
+    assert critics_matrix.shape[1] == len(item_dic)
+    assert np.all(0 <= critics_matrix)
+    assert np.all(critics_matrix <= 5)
+    assert np.max(critics_matrix, axis=0).min() != 0  # 全てが0の列は存在してはならない
+    assert np.max(critics_matrix, axis=1).min() != 0  # 全てが0の行は存在してはならない
