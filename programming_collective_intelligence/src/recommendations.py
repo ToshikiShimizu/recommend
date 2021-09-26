@@ -64,12 +64,14 @@ def load_critics() -> Tuple[np.ndarray, dict, dict]:
     return critics_matrix, user_dic, item_dic
 
 
-def calc_similarity_with_missing_value(v1: np.ndarray, v2: np.ndarray, missing_value: float = 0) -> float:
+def calc_similarity_with_missing_value(v1: np.ndarray, v2: np.ndarray, 
+    metric: str = 'euclidean', missing_value: float = 0) -> float:
     """[summary]
 
     Args:
         v1 (np.ndarray): ベクトル
         v2 (np.ndarray): ベクトル
+        metric (str, optional): スコア計算のメトリック
         missing_value (float, optional): 欠損値
 
     Returns:
@@ -78,7 +80,28 @@ def calc_similarity_with_missing_value(v1: np.ndarray, v2: np.ndarray, missing_v
     idx = np.where((v1 != missing_value) & (v2 != missing_value))[0]
     if len(idx) == 0:
         return 0
-    sim: float = sim_distance_euclidean(v1[idx], v2[idx])
+    sim: float = calc_similarity(v1[idx], v2[idx], metric)
+    return sim
+
+
+def calc_similarity(v1: np.ndarray, v2: np.ndarray, \
+    metric: str = 'euclidean') -> float:
+    """[summary]
+
+    Args:
+        v1 (np.ndarray): ベクトル
+        v2 (np.ndarray): ベクトル
+        metric (str, optional): スコア計算のメトリック
+
+    Returns:
+        float: 類似度
+    """
+
+    sim: float
+    if (metric == 'euclidean'):
+        sim = sim_distance_euclidean(v1, v2)
+    elif (metric == 'pearson'):
+        sim = calc_pearson_correlation_coefficient(v1, v2)
     return sim
 
 
@@ -94,7 +117,7 @@ def calc_pearson_correlation_coefficient(v1: np.ndarray, v2: np.ndarray) -> floa
     """
     v1_diff = (v1 - v1.mean())
     v2_diff = (v2 - v2.mean())
-    square_denominator =  np.sum(v1_diff**2) * np.sum(v2_diff**2) 
+    square_denominator = np.sum(v1_diff**2) * np.sum(v2_diff**2) 
     if square_denominator == 0:
         return 0
     coef: float = np.sum(v1_diff * v2_diff) / np.sqrt(square_denominator)

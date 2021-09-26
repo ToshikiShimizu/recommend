@@ -52,3 +52,11 @@ def test_calc_similarity_with_missing_value(v1, v2, expected):
 ])
 def test_calc_pearson_correlation_coefficient(v1, v2, expected):
     assert recommendations.calc_pearson_correlation_coefficient(v1, v2) == expected
+
+
+@pytest.mark.parametrize('v1,v2', [
+    (np.array([1, 2, 3]), np.array([1, 3, 2])),
+])
+def test_calc_similarity(v1, v2):
+    assert recommendations.calc_similarity(v1, v2, metric='euclidean') == recommendations.sim_distance_euclidean(v1, v2)
+    assert recommendations.calc_similarity(v1, v2, metric='pearson') == recommendations.calc_pearson_correlation_coefficient(v1, v2)
