@@ -1,6 +1,4 @@
 import numpy as np
-from critics import critics
-from typing import Tuple
 
 
 def calc_euclidean_distance(v1: np.ndarray, v2: np.ndarray) -> float:
@@ -33,38 +31,7 @@ def calc_euclidean_similarity(v1: np.ndarray, v2: np.ndarray) -> float:
     return sim
 
 
-def load_critics() -> Tuple[np.ndarray, dict, dict]:
-    """criticsをロードし、user-item行列に変換して返却する
-
-    Returns:
-        Tuple[np.ndarray, dict, dict]: \
-            user-item matrix,user_master, item_master
-    """
-    user_set = set()
-    item_set = set()
-    # criticsはimportが必要な関数で、辞書を返す
-    for user_k, user_v in critics.items():
-        user_set.add(user_k)
-        for item_k, item_v in user_v.items():
-            item_set.add(item_k)
-    # ソートしてリストとして保持
-    user_list = sorted(list(user_set))
-    item_list = sorted(list(item_set))
-    # 辞書に変換。valueとして0-originのindexを付与する
-    user_dic: dict = dict(zip(user_list, range(len(user_list))))
-    item_dic = dict(zip(item_list, range(len(item_list))))
-    # 行列は、行方向がユーザで列方向がアイテム
-    critics_matrix = np.zeros((len(user_dic), len(item_dic)))
-    # もう一度ループして、ratingを格納
-    for user_k, user_v in critics.items():
-        user_idx = user_dic[user_k]
-        for item_k, item_v in user_v.items():
-            item_idx = item_dic[item_k]
-            critics_matrix[user_idx][item_idx] = item_v
-    return critics_matrix, user_dic, item_dic
-
-
-def calc_similarity_with_missing_value(v1: np.ndarray, v2: np.ndarray, 
+def calc_similarity_with_missing_value(v1: np.ndarray, v2: np.ndarray,
                                        metric: str = 'euclidean',
                                        missing_value: float = 0) -> float:
     """類似度を計算する関数。ベクトルのどちらかに欠損値が含まれる場合、該当idxは無視する。
@@ -86,7 +53,7 @@ def calc_similarity_with_missing_value(v1: np.ndarray, v2: np.ndarray,
 
 
 def calc_similarity(v1: np.ndarray, v2: np.ndarray,
-    metric: str = 'euclidean') -> float:
+                    metric: str = 'euclidean') -> float:
     """類似度を計算する関数。metricによる分岐はこの関数で処理する。
 
     Args:
@@ -107,7 +74,7 @@ def calc_similarity(v1: np.ndarray, v2: np.ndarray,
 
 
 def calc_pearson_correlation_coefficient(v1: np.ndarray, v2: np.ndarray) \
-     -> float:
+        -> float:
     """ピアソン相関係数を計算する
 
     Args:
@@ -119,7 +86,7 @@ def calc_pearson_correlation_coefficient(v1: np.ndarray, v2: np.ndarray) \
     """
     v1_diff = (v1 - v1.mean())
     v2_diff = (v2 - v2.mean())
-    square_denominator: float = np.sum(v1_diff**2) * np.sum(v2_diff**2) 
+    square_denominator: float = np.sum(v1_diff**2) * np.sum(v2_diff**2)
     if square_denominator == 0:
         return 0
     coef: float = np.sum(v1_diff * v2_diff) / np.sqrt(square_denominator)
