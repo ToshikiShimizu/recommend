@@ -1,5 +1,5 @@
 from recommendations import calc_similarity
-from critics import Critic
+from critic import Critic
 
 
 def main() -> None:

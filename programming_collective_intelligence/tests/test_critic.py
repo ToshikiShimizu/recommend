@@ -1,6 +1,5 @@
-import pytest
 import numpy as np
-from critics import Critic
+from critic import Critic
 
 
 def test_load_critics():
