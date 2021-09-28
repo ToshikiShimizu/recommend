@@ -28,11 +28,11 @@ class Critic:
         self.user_dic: dict = dict(zip(user_list, range(len(user_list))))
         self.item_dic = dict(zip(item_list, range(len(item_list))))
         # 行列は、行方向がユーザで列方向がアイテム
-        self.critics_matrix = np.zeros(
+        self.matrix = np.zeros(
             (len(self.user_dic), len(self.item_dic)))
         # もう一度ループして、ratingを格納
         for user_k, user_v in critics.items():
             user_idx = self.user_dic[user_k]
             for item_k, item_v in user_v.items():
                 item_idx = self.item_dic[item_k]
-                self.critics_matrix[user_idx][item_idx] = item_v
+                self.matrix[user_idx][item_idx] = item_v
