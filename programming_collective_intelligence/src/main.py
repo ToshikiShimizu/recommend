@@ -5,9 +5,6 @@ import numpy as np
 
 def main() -> None:
     critic = Critic()
-    print(critic.matrix, critic.user_dic, critic.item_dic)
-    sim = calc_similarity(critic.matrix[0], critic.matrix[1])
-    print(sim)
 
     # top_matches
     user_list = list(critic.user_dic.keys())
