@@ -2,6 +2,7 @@ from recommendations import calc_similarity
 from critic import Critic
 import numpy as np
 
+
 def main() -> None:
     critic = Critic()
     print(critic.matrix, critic.user_dic, critic.item_dic)
@@ -21,6 +22,7 @@ def main() -> None:
     idx = np.argsort(sims)[::-1]
     for i in idx:
         print(user_list[i], sims[i])
+
 
 if __name__ == "__main__":
     main()

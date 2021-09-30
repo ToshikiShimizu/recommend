@@ -40,7 +40,5 @@ class Critic:
     def get_critics_for_one_user(self, user_name):
         return self.matrix[self.user_dic[user_name]]
 
-
-
     def get_critics_for_one_item(self, item_name):
-        return self.matrix[:,self.item_dic[item_name]]
+        return self.matrix[:, self.item_dic[item_name]]

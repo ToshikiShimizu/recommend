@@ -19,8 +19,10 @@ def test_load_critics(critic_fixture):
 
 
 def test_get_critics_for_one_user(critic_fixture):
-    assert isinstance(critic_fixture.get_critics_for_one_user('Lisa Rose'), np.ndarray)
+    assert isinstance(critic_fixture.get_critics_for_one_user(
+        'Lisa Rose'), np.ndarray)
 
 
 def test_get_critics_for_one_item(critic_fixture):
-    assert isinstance(critic_fixture.get_critics_for_one_item('Lady in the Water'), np.ndarray)
+    assert isinstance(critic_fixture.get_critics_for_one_item(
+        'Lady in the Water'), np.ndarray)
