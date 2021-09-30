@@ -36,3 +36,11 @@ class Critic:
             for item_k, item_v in user_v.items():
                 item_idx = self.item_dic[item_k]
                 self.matrix[user_idx][item_idx] = item_v
+
+    def get_critics_for_one_user(self, user_name):
+        return self.matrix[self.user_dic[user_name]]
+
+
+
+    def get_critics_for_one_item(self, item_name):
+        return self.matrix[:,self.item_dic[item_name]]
