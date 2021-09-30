@@ -13,10 +13,10 @@ def main() -> None:
     user_list = list(critic.user_dic.keys())
     user_name = user_list[0]
     print(user_name)
+    v1 = critic.get_critics_for_one_user(user_name)
     sims = []
-    for k, v in critic.user_dic.items():
-        v1 = critic.matrix[critic.user_dic[user_name]]
-        v2 = critic.matrix[v]
+    for key in critic.user_dic.keys():
+        v2 = critic.get_critics_for_one_user(key)
         sim = calc_similarity(v1, v2)
         sims.append(sim)
     idx = np.argsort(sims)[::-1]
