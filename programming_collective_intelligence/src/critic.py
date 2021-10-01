@@ -8,7 +8,7 @@ class Critic:
         self.load_critics()
 
     def load_critics(self):
-        """criticsをロードし、user-item行列に変換して返却する
+        """criticsをロードし、user-item行列を作成する
 
         Returns:
             Tuple[np.ndarray, dict, dict]: \
@@ -37,8 +37,24 @@ class Critic:
                 item_idx = self.item_dic[item_k]
                 self.matrix[user_idx][item_idx] = item_v
 
-    def get_critics_for_one_user(self, user_name):
+    def get_critics_for_one_user(self, user_name: str) -> np.ndarray:
+        """指定されたユーザの評価値ベクトルを返却する
+
+        Args:
+            user_name (str): キーとなるユーザ
+
+        Returns:
+            np.ndarray: 評価値ベクトル
+        """
         return self.matrix[self.user_dic[user_name]]
 
-    def get_critics_for_one_item(self, item_name):
+    def get_critics_for_one_item(self, item_name: str) -> np.ndarray:
+        """指定されたアイテムの評価値ベクトルを返却する
+
+        Args:
+            item_name (str): キーとなるアイテム
+
+        Returns:
+            np.ndarray: 評価値ベクトル
+        """
         return self.matrix[:, self.item_dic[item_name]]
