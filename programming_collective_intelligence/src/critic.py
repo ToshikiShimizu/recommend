@@ -1,6 +1,7 @@
 import numpy as np
-from typing import Tuple, List, Dict
+from typing import Union, List, Dict
 from critics_data import critics
+from recommendations import calc_similarity
 
 
 class Critic:
@@ -61,18 +62,39 @@ class Critic:
         """
         return self.matrix[:, self.item_dic[item_name]]
 
-    def get_user_list(self) -> List[int]:
+    def get_user_list(self) -> List[str]:
         """ユーザリストを返却する
 
         Returns:
-            List[int]: ユーザリスト
+            List[str]: ユーザリスト
         """
         return self.user_list
 
-    def get_item_list(self) -> List[int]:
+    def get_item_list(self) -> List[str]:
         """アイテムリストを返却する
 
         Returns:
-            List[int]: アイテムリスト
+            List[str]: アイテムリスト
         """
         return self.item_list
+
+    def top_matches(self, user: str) -> List[List[Union[str, float]]]:
+        """[summary]
+
+        Args:
+            user (str): 類似ユーザのリストを取得したいユーザ
+
+        Returns:
+            List[List[Union[str, float]]]: アイテムリスト
+        """
+        v1 = self.get_critics_for_one_user(user)
+        sim_list = []
+        for key in self.user_list:
+            v2 = self.get_critics_for_one_user(key)
+            sim = calc_similarity(v1, v2)
+            sim_list.append(sim)
+        idx = np.argsort(np.array(sim_list))[::-1]
+        user_sim = []
+        for i in idx:
+            user_sim.append([self.user_list[i], sim_list[i]])
+        return user_sim

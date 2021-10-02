@@ -34,3 +34,12 @@ def test_get_user_list(critic_fixture):
 
 def test_get_item_list(critic_fixture):
     assert isinstance(critic_fixture.get_item_list(), list)
+
+
+def test_top_matches(critic_fixture):
+    user = critic_fixture.get_user_list()[0]
+    user_sim = critic_fixture.top_matches(user)
+    assert isinstance(user_sim[0], list)
+    assert isinstance(user_sim[0][0], str)
+    assert isinstance(user_sim[0][1], float)
+    assert user_sim[0][1] >= user_sim[-1][1]
