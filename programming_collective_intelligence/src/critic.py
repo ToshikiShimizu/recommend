@@ -79,13 +79,13 @@ class Critic:
         return self.item_list
 
     def top_matches(self, user: str) -> List[List[Union[str, float]]]:
-        """[summary]
+        """類似度が高いユーザとその類似度のリストを、類似度の降順に返却する
 
         Args:
             user (str): 類似ユーザのリストを取得したいユーザ
 
         Returns:
-            List[List[Union[str, float]]]: アイテムリスト
+            List[List[Union[str, float]]]: 類似ユーザと類似度のリスト
         """
         v1 = self.get_critics_for_one_user(user)
         sim_list = []
