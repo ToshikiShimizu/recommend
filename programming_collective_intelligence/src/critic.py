@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple
+from typing import Tuple, List, Dict
 from critics_data import critics
 
 
@@ -22,11 +22,13 @@ class Critic:
             for item_k, item_v in user_v.items():
                 item_set.add(item_k)
         # ソートしてリストとして保持
-        user_list = sorted(list(user_set))
-        item_list = sorted(list(item_set))
+        self.user_list: List[str] = sorted(list(user_set))
+        self.item_list: List[str] = sorted(list(item_set))
         # 辞書に変換。valueとして0-originのindexを付与する
-        self.user_dic: dict = dict(zip(user_list, range(len(user_list))))
-        self.item_dic = dict(zip(item_list, range(len(item_list))))
+        self.user_dic: Dict[str, int] = dict(
+            zip(self.user_list, range(len(self.user_list))))
+        self.item_dic: Dict[str, int] = dict(
+            zip(self.item_list, range(len(self.item_list))))
         # 行列は、行方向がユーザで列方向がアイテム
         self.matrix = np.zeros(
             (len(self.user_dic), len(self.item_dic)))
@@ -58,3 +60,19 @@ class Critic:
             np.ndarray: 評価値ベクトル
         """
         return self.matrix[:, self.item_dic[item_name]]
+
+    def get_user_list(self) -> List[int]:
+        """ユーザリストを返却する
+
+        Returns:
+            List[int]: ユーザリスト
+        """
+        return self.user_list
+
+    def get_item_list(self) -> List[int]:
+        """アイテムリストを返却する
+
+        Returns:
+            List[int]: アイテムリスト
+        """
+        return self.item_list

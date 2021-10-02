@@ -26,3 +26,11 @@ def test_get_critics_for_one_user(critic_fixture):
 def test_get_critics_for_one_item(critic_fixture):
     assert isinstance(critic_fixture.get_critics_for_one_item(
         'Lady in the Water'), np.ndarray)
+
+
+def test_get_user_list(critic_fixture):
+    assert isinstance(critic_fixture.get_user_list(), list)
+
+
+def test_get_item_list(critic_fixture):
+    assert isinstance(critic_fixture.get_item_list(), list)
