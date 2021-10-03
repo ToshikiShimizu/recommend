@@ -93,7 +93,7 @@ class Critic:
         """
         return self.item_list
 
-    def get_similar_users(self, user: str) -> List[List[Union[str, float]]]:
+    def get_similar_objects(self, object_type: str, object_name: str) -> List[List[Union[str, float]]]:
         """類似度が高いユーザとその類似度のリストを、類似度の降順に返却する
 
         Args:
@@ -102,14 +102,18 @@ class Critic:
         Returns:
             List[List[Union[str, float]]]: 類似ユーザと類似度のリスト
         """
-        v1 = self.get_critics_for_one_user(user)
+        v1 = self.get_critics_for_one_object(object_type, object_name)
         sim_list = []
-        for key in self.user_list:
-            v2 = self.get_critics_for_one_user(key)
+        if object_type == 'user':
+            object_list = self.get_user_list()
+        elif object_type == 'item':
+            object_list = self.get_item_list()
+        for key in object_list:
+            v2 = self.get_critics_for_one_object(object_type, key)
             sim = calc_similarity(v1, v2)
             sim_list.append(sim)
         idx = np.argsort(np.array(sim_list))[::-1]
-        user_sim = []
+        object_sim = []
         for i in idx:
-            user_sim.append([self.user_list[i], sim_list[i]])
-        return user_sim
+            object_sim.append([object_list[i], sim_list[i]])
+        return object_sim

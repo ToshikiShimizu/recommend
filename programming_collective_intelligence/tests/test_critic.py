@@ -46,10 +46,18 @@ def test_get_item_list(critic_fixture):
     assert isinstance(critic_fixture.get_item_list(), list)
 
 
-def test_get_similar_users(critic_fixture):
+def test_get_similar_objects(critic_fixture):
+    # user
     user = critic_fixture.get_user_list()[0]
-    user_sim = critic_fixture.get_similar_users(user)
+    user_sim = critic_fixture.get_similar_objects('user', user)
     assert isinstance(user_sim[0], list)
     assert isinstance(user_sim[0][0], str)
     assert isinstance(user_sim[0][1], float)
     assert user_sim[0][1] >= user_sim[-1][1]
+    # item
+    item = critic_fixture.get_item_list()[0]
+    item_sim = critic_fixture.get_similar_objects('item', item)
+    assert isinstance(item_sim[0], list)
+    assert isinstance(item_sim[0][0], str)
+    assert isinstance(item_sim[0][1], float)
+    assert item_sim[0][1] >= item_sim[-1][1]
