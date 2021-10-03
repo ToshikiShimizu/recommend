@@ -78,7 +78,7 @@ class Critic:
         """
         return self.item_list
 
-    def top_matches(self, user: str) -> List[List[Union[str, float]]]:
+    def get_similar_users(self, user: str) -> List[List[Union[str, float]]]:
         """類似度が高いユーザとその類似度のリストを、類似度の降順に返却する
 
         Args:
