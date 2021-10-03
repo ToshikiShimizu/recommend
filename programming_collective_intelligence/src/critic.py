@@ -6,9 +6,9 @@ from recommendations import calc_similarity
 
 class Critic:
     def __init__(self):
-        self.load_critics()
+        self._load_ciritics()
 
-    def load_critics(self):
+    def _load_ciritics(self):
         """criticsをロードし、user-item行列を作成する
 
         Returns:
@@ -40,7 +40,7 @@ class Critic:
                 item_idx = self._item_dic[item_k]
                 self.matrix[user_idx][item_idx] = item_v
 
-    def get_critics_for_one_user(self, user_name: str) -> np.ndarray:
+    def _get_critics_for_one_user(self, user_name: str) -> np.ndarray:
         """指定されたユーザの評価値ベクトルを返却する
 
         Args:
@@ -51,7 +51,7 @@ class Critic:
         """
         return self.matrix[self._user_dic[user_name]]
 
-    def get_critics_for_one_item(self, item_name: str) -> np.ndarray:
+    def _get_critics_for_one_item(self, item_name: str) -> np.ndarray:
         """指定されたアイテムの評価値ベクトルを返却する
 
         Args:
@@ -73,9 +73,9 @@ class Critic:
             np.ndarray: 評価値ベクトル
         """
         if object_type == 'user':
-            return self.get_critics_for_one_user(object_name)
+            return self._get_critics_for_one_user(object_name)
         elif object_type == 'item':
-            return self.get_critics_for_one_item(object_name)
+            return self._get_critics_for_one_item(object_name)
 
     def get_user_list(self) -> List[str]:
         """ユーザリストを返却する
