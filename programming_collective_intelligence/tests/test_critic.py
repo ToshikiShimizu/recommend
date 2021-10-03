@@ -10,8 +10,8 @@ def critic_fixture():
 
 
 def test_load_critics(critic_fixture):
-    assert critic_fixture.matrix.shape[0] == len(critic_fixture.user_dic)
-    assert critic_fixture.matrix.shape[1] == len(critic_fixture.item_dic)
+    assert critic_fixture.matrix.shape[0] == len(critic_fixture._user_dic)
+    assert critic_fixture.matrix.shape[1] == len(critic_fixture._item_dic)
     assert np.all(0 <= critic_fixture.matrix)
     assert np.all(critic_fixture.matrix <= 5)
     assert np.max(critic_fixture.matrix, axis=0).min() != 0  # 全てが0の列は存在してはならない

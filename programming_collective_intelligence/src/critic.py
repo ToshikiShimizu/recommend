@@ -23,21 +23,21 @@ class Critic:
             for item_k, item_v in user_v.items():
                 item_set.add(item_k)
         # ソートしてリストとして保持
-        self.user_list: List[str] = sorted(list(user_set))
-        self.item_list: List[str] = sorted(list(item_set))
+        self._user_list: List[str] = sorted(list(user_set))
+        self._item_list: List[str] = sorted(list(item_set))
         # 辞書に変換。valueとして0-originのindexを付与する
-        self.user_dic: Dict[str, int] = dict(
-            zip(self.user_list, range(len(self.user_list))))
-        self.item_dic: Dict[str, int] = dict(
-            zip(self.item_list, range(len(self.item_list))))
+        self._user_dic: Dict[str, int] = dict(
+            zip(self._user_list, range(len(self._user_list))))
+        self._item_dic: Dict[str, int] = dict(
+            zip(self._item_list, range(len(self._item_list))))
         # 行列は、行方向がユーザで列方向がアイテム
         self.matrix = np.zeros(
-            (len(self.user_dic), len(self.item_dic)))
+            (len(self._user_dic), len(self._item_dic)))
         # もう一度ループして、ratingを格納
         for user_k, user_v in critics.items():
-            user_idx = self.user_dic[user_k]
+            user_idx = self._user_dic[user_k]
             for item_k, item_v in user_v.items():
-                item_idx = self.item_dic[item_k]
+                item_idx = self._item_dic[item_k]
                 self.matrix[user_idx][item_idx] = item_v
 
     def get_critics_for_one_user(self, user_name: str) -> np.ndarray:
@@ -49,7 +49,7 @@ class Critic:
         Returns:
             np.ndarray: 評価値ベクトル
         """
-        return self.matrix[self.user_dic[user_name]]
+        return self.matrix[self._user_dic[user_name]]
 
     def get_critics_for_one_item(self, item_name: str) -> np.ndarray:
         """指定されたアイテムの評価値ベクトルを返却する
@@ -60,7 +60,7 @@ class Critic:
         Returns:
             np.ndarray: 評価値ベクトル
         """
-        return self.matrix[:, self.item_dic[item_name]]
+        return self.matrix[:, self._item_dic[item_name]]
 
     def get_critics_for_one_object(self, object_type: str, object_name: str) -> np.ndarray:
         """指定されたユーザまたはアイテムの評価値ベクトルを返却する
@@ -83,7 +83,7 @@ class Critic:
         Returns:
             List[str]: ユーザリスト
         """
-        return self.user_list
+        return self._user_list
 
     def get_item_list(self) -> List[str]:
         """アイテムリストを返却する
@@ -91,16 +91,16 @@ class Critic:
         Returns:
             List[str]: アイテムリスト
         """
-        return self.item_list
+        return self._item_list
 
     def get_similar_objects(self, object_type: str, object_name: str) -> List[List[Union[str, float]]]:
-        """類似度が高いユーザとその類似度のリストを、類似度の降順に返却する
+        """類似度が高いユーザ(アイテム)とその類似度のリストを、類似度の降順に返却する
 
         Args:
-            user (str): 類似ユーザのリストを取得したいユーザ
+            user (str): 類似リストを取得したいユーザ(アイテム)
 
         Returns:
-            List[List[Union[str, float]]]: 類似ユーザと類似度のリスト
+            List[List[Union[str, float]]]: 類似ユーザ(アイテム)と類似度のリスト
         """
         v1 = self.get_critics_for_one_object(object_type, object_name)
         sim_list = []
