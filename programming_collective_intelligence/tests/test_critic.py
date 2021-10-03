@@ -28,6 +28,16 @@ def test_get_critics_for_one_item(critic_fixture):
         'Lady in the Water'), np.ndarray)
 
 
+def test_get_critics_for_one_object(critic_fixture):
+    expected = critic_fixture.get_critics_for_one_item('Lady in the Water')
+    results = critic_fixture.get_critics_for_one_object(
+        'item', 'Lady in the Water')
+    assert (expected == results).all()
+    expected = critic_fixture.get_critics_for_one_user('Lisa Rose')
+    results = critic_fixture.get_critics_for_one_object('user', 'Lisa Rose')
+    assert (expected == results).all()
+
+
 def test_get_user_list(critic_fixture):
     assert isinstance(critic_fixture.get_user_list(), list)
 

@@ -62,6 +62,21 @@ class Critic:
         """
         return self.matrix[:, self.item_dic[item_name]]
 
+    def get_critics_for_one_object(self, object_type: str, object_name: str) -> np.ndarray:
+        """指定されたユーザまたはアイテムの評価値ベクトルを返却する
+
+        Args:
+            object_type (str): 'user' or 'item'
+            object_name (str): キーとなるユーザまたはアイテム
+
+        Returns:
+            np.ndarray: 評価値ベクトル
+        """
+        if object_type == 'user':
+            return self.get_critics_for_one_user(object_name)
+        elif object_type == 'item':
+            return self.get_critics_for_one_item(object_name)
+
     def get_user_list(self) -> List[str]:
         """ユーザリストを返却する
 
