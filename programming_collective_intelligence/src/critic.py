@@ -6,9 +6,9 @@ from recommendations import calc_similarity
 
 class Critic:
     def __init__(self):
-        self._load_ciritics()
+        self._load_criitics()
 
-    def _load_ciritics(self):
+    def _load_criitics(self):
         """criticsをロードし、user-item行列を作成する
 
         Returns:
