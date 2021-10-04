@@ -1,15 +1,15 @@
 import numpy as np
 from typing import Union, List, Dict
-from critics_data import critics
-from recommendations import calc_similarity
+from ratings_data import ratings
+from similarity import calc_similarity
 
 
-class Critic:
+class Recommendation:
     def __init__(self):
-        self._load_criitics()
+        self._load_ratings()
 
-    def _load_criitics(self):
-        """criticsをロードし、user-item行列を作成する
+    def _load_ratings(self):
+        """ratingsをロードし、user-item行列を作成する
 
         Returns:
             Tuple[np.ndarray, dict, dict]: \
@@ -17,8 +17,8 @@ class Critic:
         """
         user_set = set()
         item_set = set()
-        # criticsはimportが必要な関数で、辞書を返す
-        for user_k, user_v in critics.items():
+        # ratingsはimportが必要な関数で、辞書を返す
+        for user_k, user_v in ratings.items():
             user_set.add(user_k)
             for item_k, item_v in user_v.items():
                 item_set.add(item_k)
@@ -34,13 +34,13 @@ class Critic:
         self.matrix = np.zeros(
             (len(self._user_dic), len(self._item_dic)))
         # もう一度ループして、ratingを格納
-        for user_k, user_v in critics.items():
+        for user_k, user_v in ratings.items():
             user_idx = self._user_dic[user_k]
             for item_k, item_v in user_v.items():
                 item_idx = self._item_dic[item_k]
                 self.matrix[user_idx][item_idx] = item_v
 
-    def _get_critics_for_one_user(self, user_name: str) -> np.ndarray:
+    def _get_ratings_for_one_user(self, user_name: str) -> np.ndarray:
         """指定されたユーザの評価値ベクトルを返却する
 
         Args:
@@ -51,7 +51,7 @@ class Critic:
         """
         return self.matrix[self._user_dic[user_name]]
 
-    def _get_critics_for_one_item(self, item_name: str) -> np.ndarray:
+    def _get_ratings_for_one_item(self, item_name: str) -> np.ndarray:
         """指定されたアイテムの評価値ベクトルを返却する
 
         Args:
@@ -62,7 +62,7 @@ class Critic:
         """
         return self.matrix[:, self._item_dic[item_name]]
 
-    def get_critics_for_one_object(self, object_type: str, object_name: str) -> np.ndarray:
+    def get_ratings_for_one_object(self, object_type: str, object_name: str) -> np.ndarray:
         """指定されたユーザまたはアイテムの評価値ベクトルを返却する
 
         Args:
@@ -73,9 +73,9 @@ class Critic:
             np.ndarray: 評価値ベクトル
         """
         if object_type == 'user':
-            return self._get_critics_for_one_user(object_name)
+            return self._get_ratings_for_one_user(object_name)
         elif object_type == 'item':
-            return self._get_critics_for_one_item(object_name)
+            return self._get_ratings_for_one_item(object_name)
 
     def get_user_list(self) -> List[str]:
         """ユーザリストを返却する
@@ -102,14 +102,14 @@ class Critic:
         Returns:
             List[List[Union[str, float]]]: 類似ユーザ(アイテム)と類似度のリスト
         """
-        v1 = self.get_critics_for_one_object(object_type, object_name)
+        v1 = self.get_ratings_for_one_object(object_type, object_name)
         sim_list = []
         if object_type == 'user':
             object_list = self.get_user_list()
         elif object_type == 'item':
             object_list = self.get_item_list()
         for key in object_list:
-            v2 = self.get_critics_for_one_object(object_type, key)
+            v2 = self.get_ratings_for_one_object(object_type, key)
             sim = calc_similarity(v1, v2)
             sim_list.append(sim)
         idx = np.argsort(np.array(sim_list))[::-1]

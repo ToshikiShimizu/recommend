@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-import recommendations
+import similarity
 
 
 @pytest.mark.parametrize('v1,v2,expected', [
@@ -10,7 +10,7 @@ import recommendations
     (np.array([1]), np.array([2]), 1),
 ])
 def test_calc_euclidean_distance(v1, v2, expected):
-    assert recommendations.calc_euclidean_distance(v1, v2) == expected
+    assert similarity.calc_euclidean_distance(v1, v2) == expected
 
 
 @pytest.mark.parametrize('v1,v2,expected', [
@@ -20,7 +20,7 @@ def test_calc_euclidean_distance(v1, v2, expected):
     (np.array([1]), np.array([2]), 1/2),
 ])
 def test_calc_euclidean_similarity(v1, v2, expected):
-    assert recommendations.calc_euclidean_similarity(v1, v2) == expected
+    assert similarity.calc_euclidean_similarity(v1, v2) == expected
 
 
 @pytest.mark.parametrize('v1,v2,expected', [
@@ -30,7 +30,7 @@ def test_calc_euclidean_similarity(v1, v2, expected):
     (np.array([1]), np.array([2]), 1/2),
 ])
 def test_calc_similarity_with_missing_value(v1, v2, expected):
-    assert recommendations.calc_similarity_with_missing_value(
+    assert similarity.calc_similarity_with_missing_value(
         v1, v2) == expected
 
 
@@ -42,7 +42,7 @@ def test_calc_similarity_with_missing_value(v1, v2, expected):
     (np.array([1]), np.array([2]), 0),
 ])
 def test_calc_pearson_correlation_coefficient(v1, v2, expected):
-    assert recommendations.calc_pearson_correlation_coefficient(
+    assert similarity.calc_pearson_correlation_coefficient(
         v1, v2) == expected
 
 
@@ -50,7 +50,7 @@ def test_calc_pearson_correlation_coefficient(v1, v2, expected):
     (np.array([1, 2, 3]), np.array([1, 3, 2])),
 ])
 def test_calc_similarity(v1, v2):
-    assert recommendations.calc_similarity(
-        v1, v2, metric='euclidean') == recommendations.calc_euclidean_similarity(v1, v2)
-    assert recommendations.calc_similarity(
-        v1, v2, metric='pearson') == recommendations.calc_pearson_correlation_coefficient(v1, v2)
+    assert similarity.calc_similarity(
+        v1, v2, metric='euclidean') == similarity.calc_euclidean_similarity(v1, v2)
+    assert similarity.calc_similarity(
+        v1, v2, metric='pearson') == similarity.calc_pearson_correlation_coefficient(v1, v2)

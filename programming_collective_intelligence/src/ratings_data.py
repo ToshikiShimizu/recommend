@@ -1,4 +1,4 @@
-critics = {
+ratings = {
     'Lisa Rose': {
         'Lady in the Water': 2.5,
         'Snakes on a Plane': 3.5,
