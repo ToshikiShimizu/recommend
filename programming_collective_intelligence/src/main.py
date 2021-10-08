@@ -4,7 +4,7 @@ import numpy as np
 
 
 def main() -> None:
-    recommendation = Recommendation()
+    recommendation = Recommendation(-1)
 
     # get_similar_users
     user_list = recommendation.get_user_list()

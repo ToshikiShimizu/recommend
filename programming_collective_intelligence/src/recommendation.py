@@ -1,11 +1,15 @@
 import numpy as np
 from typing import Union, List, Dict
 from ratings_data import ratings
-from similarity import calc_similarity
+from similarity import calc_similarity_with_missing_value
+import dataclasses
 
 
+@dataclasses.dataclass
 class Recommendation:
-    def __init__(self):
+    missing_value: float = 0
+
+    def __post_init__(self):
         self._load_ratings()
 
     def _load_ratings(self):
@@ -110,7 +114,9 @@ class Recommendation:
             object_list = self.get_item_list()
         for key in object_list:
             v2 = self.get_ratings_for_one_object(object_type, key)
-            sim = calc_similarity(v1, v2)
+            print(v1, v2)
+            sim = calc_similarity_with_missing_value(
+                v1, v2, 'euclidean', self.missing_value)
             sim_list.append(sim)
         idx = np.argsort(np.array(sim_list))[::-1]
         object_sim = []
