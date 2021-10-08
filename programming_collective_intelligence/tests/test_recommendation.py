@@ -71,9 +71,10 @@ def test_get_similar_objects(recommendation_fixture):
 
 def test_get_item_list_not_rated_by(recommendation_fixture):
     user = recommendation_fixture.get_user_list()[0]
-    item_list = recommendation_fixture.get_item_list_not_rated_by(user)
-    assert isinstance(item_list, list)  # list
+    not_rated_item_list = recommendation_fixture.get_item_list_not_rated_by(
+        user)
+    assert isinstance(not_rated_item_list, list)  # list
     ratings = recommendation_fixture._get_ratings_for_one_user(user)
-    expected_idx = np.where(ratings > 0)[0]
-    result_idx = [recommendation_fixture._item_dic[k] for k in item_list]
-    assert result_idx == expected_idx
+    not_rated_item_idx = [recommendation_fixture._item_dic[k]
+                          for k in not_rated_item_list]
+    assert np.array(ratings)[not_rated_item_idx].sum() == 0

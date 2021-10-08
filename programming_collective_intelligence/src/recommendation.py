@@ -117,3 +117,16 @@ class Recommendation:
         for i in idx:
             object_sim.append([object_list[i], sim_list[i]])
         return object_sim
+
+    def get_item_list_not_rated_by(self, user: str) -> List[str]:
+        """対象ユーザが未評価であるアイテムのリスト
+
+        Args:
+            user (str): 対象ユーザ
+
+        Returns:
+            List[str]: アイテムのリスト
+        """
+        ratings = self._get_ratings_for_one_user(user)
+        idx = np.where(ratings == 0)[0]
+        return np.array(self._item_list)[idx].tolist()
