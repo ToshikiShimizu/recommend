@@ -66,7 +66,7 @@ class Recommendation:
         """
         return self.matrix[:, self._item_dic[item_name]]
 
-    def get_ratings_for_one_object(self, object_type: str, object_name: str) -> np.ndarray:
+    def _get_ratings_for_one_object(self, object_type: str, object_name: str) -> np.ndarray:
         """指定されたユーザまたはアイテムの評価値ベクトルを返却する
 
         Args:
@@ -106,15 +106,14 @@ class Recommendation:
         Returns:
             List[List[Union[str, float]]]: 類似ユーザ(アイテム)と類似度のリスト
         """
-        v1 = self.get_ratings_for_one_object(object_type, object_name)
+        v1 = self._get_ratings_for_one_object(object_type, object_name)
         sim_list = []
         if object_type == 'user':
             object_list = self.get_user_list()
         elif object_type == 'item':
             object_list = self.get_item_list()
         for key in object_list:
-            v2 = self.get_ratings_for_one_object(object_type, key)
-            print(v1, v2)
+            v2 = self._get_ratings_for_one_object(object_type, key)
             sim = calc_similarity_with_missing_value(
                 v1, v2, 'euclidean', self.missing_value)
             sim_list.append(sim)
@@ -124,7 +123,7 @@ class Recommendation:
             object_sim.append([object_list[i], sim_list[i]])
         return object_sim
 
-    def get_item_list_not_rated_by(self, user: str) -> List[str]:
+    def _get_item_list_not_rated_by(self, user: str) -> List[str]:
         """対象ユーザが未評価であるアイテムのリスト
 
         Args:

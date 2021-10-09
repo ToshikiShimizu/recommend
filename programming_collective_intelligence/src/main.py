@@ -1,10 +1,8 @@
-from similarity import calc_similarity
 from recommendation import Recommendation
-import numpy as np
 
 
 def main() -> None:
-    recommendation = Recommendation(-1)
+    recommendation = Recommendation(missing_value=0)
 
     # get_similar_users
     user_list = recommendation.get_user_list()

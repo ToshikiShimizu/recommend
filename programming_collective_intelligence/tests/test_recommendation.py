@@ -32,14 +32,14 @@ def test__get_ratings_for_one_item(recommendation_fixture):
         'Lady in the Water'), np.ndarray)
 
 
-def test_get_ratings_for_one_object(recommendation_fixture):
+def test__get_ratings_for_one_object(recommendation_fixture):
     expected = recommendation_fixture._get_ratings_for_one_item(
         'Lady in the Water')
-    results = recommendation_fixture.get_ratings_for_one_object(
+    results = recommendation_fixture._get_ratings_for_one_object(
         'item', 'Lady in the Water')
     assert (expected == results).all()
     expected = recommendation_fixture._get_ratings_for_one_user('Lisa Rose')
-    results = recommendation_fixture.get_ratings_for_one_object(
+    results = recommendation_fixture._get_ratings_for_one_object(
         'user', 'Lisa Rose')
     assert (expected == results).all()
 
@@ -69,9 +69,9 @@ def test_get_similar_objects(recommendation_fixture):
     assert item_sim[0][1] >= item_sim[-1][1]
 
 
-def test_get_item_list_not_rated_by(recommendation_fixture):
+def test__get_item_list_not_rated_by(recommendation_fixture):
     user = recommendation_fixture.get_user_list()[0]
-    not_rated_item_list = recommendation_fixture.get_item_list_not_rated_by(
+    not_rated_item_list = recommendation_fixture._get_item_list_not_rated_by(
         user)
     assert isinstance(not_rated_item_list, list)  # list
     ratings = recommendation_fixture._get_ratings_for_one_user(user)
