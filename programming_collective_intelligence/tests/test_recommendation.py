@@ -78,3 +78,10 @@ def test__get_item_list_not_rated_by(recommendation_fixture):
     not_rated_item_idx = [recommendation_fixture._item_dic[k]
                           for k in not_rated_item_list]
     assert np.array(ratings)[not_rated_item_idx].sum() == 0
+
+
+@pytest.mark.skip(reason="ratingsの予測を先に実装する")
+def test_get_recommendations_by_collaborative_filtering(recommendation_fixture):
+    user = recommendation_fixture.get_user_list()[0]
+    recommendations = recommendation_fixture.get_recommendations_by_collaborative_filtering(user, based = 'user')
+    assert isinstance(recommendations, list)  # list
