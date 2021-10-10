@@ -147,7 +147,7 @@ class Recommendation:
         """
         item_list = self._get_item_list_not_rated_by(user)
         user_bias = self._get_average_rating_for_one_user(user)
-        ratings = {item: user_bias for item in item_list} # TODO:値を正しく計算する
+        ratings = {item: user_bias for item in item_list}  # TODO:値を正しく計算する
         print(ratings)
         return ratings
 
