@@ -81,7 +81,13 @@ def test__get_item_list_not_rated_by(recommendation_fixture):
 
 
 @pytest.mark.skip(reason="ratingsの予測を先に実装する")
-def test_get_recommendations_by_collaborative_filtering(recommendation_fixture):
+def test_get_recommendations(recommendation_fixture):
     user = recommendation_fixture.get_user_list()[0]
-    recommendations = recommendation_fixture.get_recommendations_by_collaborative_filtering(user, based = 'user')
+    recommendations = recommendation_fixture.get_recommendations(user, based = 'user')
+    assert isinstance(recommendations, list)  # list
+
+
+def test_predict_ratings(recommendation_fixture):
+    user = recommendation_fixture.get_user_list()[0]
+    recommendations = recommendation_fixture.predict_ratings(user, based = 'user')
     assert isinstance(recommendations, list)  # list
