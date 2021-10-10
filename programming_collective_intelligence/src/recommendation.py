@@ -135,3 +135,17 @@ class Recommendation:
         ratings = self._get_ratings_for_one_user(user)
         idx = np.where(ratings == 0)[0]
         return np.array(self._item_list)[idx].tolist()
+
+    def predict_ratings(self, user: str, based: str) -> Dict[str, float]:
+        """対象ユーザの未評価アイテム集合の評価値を予測
+
+        Args:
+            user (str): 対象ユーザ
+
+        Returns:
+            Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
+        """
+        item_list = self._get_item_list_not_rated_by(user)
+        ratings = {item: 4.0 for item in item_list} # TODO:値を正しく計算する
+        print(ratings)
+        return ratings

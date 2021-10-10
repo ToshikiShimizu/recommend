@@ -88,6 +88,7 @@ def test_get_recommendations(recommendation_fixture):
 
 
 def test_predict_ratings(recommendation_fixture):
-    user = recommendation_fixture.get_user_list()[0]
+    user = 'Michael Phillips'
+    print(user)
     recommendations = recommendation_fixture.predict_ratings(user, based = 'user')
-    assert isinstance(recommendations, list)  # list
+    assert 'Just My Luck' in recommendations
