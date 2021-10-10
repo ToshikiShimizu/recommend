@@ -147,6 +147,9 @@ class Recommendation:
         """
         item_list = self._get_item_list_not_rated_by(user)
         user_bias = self._get_average_rating_for_one_user(user)
+        for item in item_list:
+            user_list = self._get_user_who_rated_item(item)
+            print(item, user_list)
         ratings = {item: user_bias for item in item_list}  # TODO:値を正しく計算する
         print(ratings)
         return ratings
@@ -161,3 +164,16 @@ class Recommendation:
             float: 平均評価値
         """
         return self._get_ratings_for_one_user(user_name).mean()
+
+    def _get_user_who_rated_item(self, item_name: str) -> List[str]:
+        """対象アイテムを評価したユーザのリスト
+
+        Args:
+            item_name (str): 対象アイテム
+
+        Returns:
+            List[str]: ユーザのリスト
+        """
+        ratings = self._get_ratings_for_one_item(item_name)
+        idx = np.where(ratings != self.missing_value)[0]
+        return np.array(self._user_list)[idx].tolist()

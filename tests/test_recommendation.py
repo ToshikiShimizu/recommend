@@ -99,3 +99,11 @@ def test__get_average_rating_for_one_user(recommendation_fixture):
     user = recommendation_fixture.get_user_list()[0]
     rating = recommendation_fixture._get_average_rating_for_one_user(user)
     assert 1.0 <= rating <= 5.0
+
+
+def test__get_user_who_rated_item(recommendation_fixture):
+    item_list = recommendation_fixture.get_item_list()
+    for item in item_list:
+        user_list = recommendation_fixture._get_user_who_rated_item(item)
+        assert isinstance(user_list, list)
+        assert len(user_list) > 0  # データの仕様上、一人以上は評価している
