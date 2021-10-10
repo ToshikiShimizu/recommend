@@ -133,7 +133,7 @@ class Recommendation:
             List[str]: アイテムのリスト
         """
         ratings = self._get_ratings_for_one_user(user)
-        idx = np.where(ratings == 0)[0]
+        idx = np.where(ratings == self.missing_value)[0]
         return np.array(self._item_list)[idx].tolist()
 
     def predict_ratings(self, user: str, based: str) -> Dict[str, float]:
