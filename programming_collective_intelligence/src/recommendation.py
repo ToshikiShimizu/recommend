@@ -146,6 +146,18 @@ class Recommendation:
             Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
         """
         item_list = self._get_item_list_not_rated_by(user)
-        ratings = {item: 4.0 for item in item_list} # TODO:値を正しく計算する
+        user_bias = self._get_average_rating_for_one_user(user)
+        ratings = {item: user_bias for item in item_list} # TODO:値を正しく計算する
         print(ratings)
         return ratings
+
+    def _get_average_rating_for_one_user(self, user_name: str) -> float:
+        """対象ユーザの評価済みアイテムの平均評価値を計算する
+
+        Args:
+            user_name (str): 対象ユーザ
+
+        Returns:
+            float: 平均評価値
+        """
+        return self._get_ratings_for_one_user(user_name).mean()
