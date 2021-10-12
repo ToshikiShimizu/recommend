@@ -165,6 +165,17 @@ class Recommendation:
         """
         return self._get_ratings_for_one_user(user_name).mean()
 
+    def _get_average_rating_for_one_item(self, item_name: str) -> float:
+        """対象アイテムの平均評価値を計算する
+
+        Args:
+            user_name (str): 対象ユーザ
+
+        Returns:
+            float: 平均評価値
+        """
+        return self._get_ratings_for_one_item(item_name).mean()
+
     def _get_user_who_rated_item(self, item_name: str) -> List[str]:
         """対象アイテムを評価したユーザのリスト
 

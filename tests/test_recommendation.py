@@ -101,6 +101,12 @@ def test__get_average_rating_for_one_user(recommendation_fixture):
     assert 1.0 <= rating <= 5.0
 
 
+def test__get_average_rating_for_one_item(recommendation_fixture):
+    item = recommendation_fixture.get_item_list()[0]
+    rating = recommendation_fixture._get_average_rating_for_one_item(item)
+    assert 1.0 <= rating <= 5.0
+
+
 def test__get_user_who_rated_item(recommendation_fixture):
     item_list = recommendation_fixture.get_item_list()
     for item in item_list:
