@@ -13,14 +13,11 @@ class Recommendation:
         self._load_ratings()
 
     def _load_ratings(self):
-        """ratingsをロードし、user-item行列を作成する
-
-        Returns:
-            Tuple[np.ndarray, dict, dict]: \
-                user-item matrix,user_master, item_master
+        """ratingsをロードし、user-item行列、辞書を作成する
         """
         user_set = set()
         item_set = set()
+
         # ratingsはimportが必要な関数で、辞書を返す
         for user_k, user_v in ratings.items():
             user_set.add(user_k)
@@ -43,6 +40,8 @@ class Recommendation:
             for item_k, item_v in user_v.items():
                 item_idx = self._item_dic[item_k]
                 self.matrix[user_idx][item_idx] = item_v
+
+        self.ratings_dict = ratings  # [user][item]
 
     def _get_ratings_for_one_user(self, user_name: str) -> np.ndarray:
         """指定されたユーザの評価値ベクトルを返却する
@@ -155,10 +154,10 @@ class Recommendation:
             print(item, user_list)
             sum_similarity: float = 0.0
             weighted_sum: float = 0.0
-            for other_user in user_list: # 定義から、自分自身は含まれない
+            for other_user in user_list:  # 定義から、自分自身は含まれない
                 v2 = self._get_ratings_for_one_object('user', other_user)
                 similarity = calc_similarity_with_missing_value(v1, v2)
-                rating = v2[self._item_dic[item]]
+                rating = self._get_rating(other_user, item)
                 print(other_user, similarity, rating)
                 weighted_sum += similarity * rating
                 sum_similarity += abs(similarity)
@@ -202,3 +201,15 @@ class Recommendation:
         ratings = self._get_ratings_for_one_item(item_name)
         idx = np.where(ratings != self.missing_value)[0]
         return np.array(self._user_list)[idx].tolist()
+
+    def _get_rating(self, user_name: str, item_name: str) -> float:
+        """対象ユーザの対象アイテムに対する評価値を取得する
+
+        Args:
+            user_name (str): 対象ユーザ
+            item_name (str): 対象アイテム
+
+        Returns:
+            float: 評価値
+        """
+        return self.ratings_dict[user_name][item_name]
