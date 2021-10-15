@@ -113,3 +113,12 @@ def test__get_user_who_rated_item(recommendation_fixture):
         user_list = recommendation_fixture._get_user_who_rated_item(item)
         assert isinstance(user_list, list)
         assert len(user_list) > 0  # データの仕様上、一人以上は評価している
+
+
+def test__get_rating(recommendation_fixture):
+    item_list = recommendation_fixture.get_item_list()
+    for item_name in item_list:
+        user_list = recommendation_fixture._get_user_who_rated_item(item_name)
+        for user_name in user_list:
+            rating = recommendation_fixture._get_rating(user_name, item_name)
+            assert 1.0 <= rating <= 5.0
