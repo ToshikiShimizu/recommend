@@ -122,48 +122,48 @@ class Recommendation:
             object_sim.append([object_list[i], sim_list[i]])
         return object_sim
 
-    def _get_item_list_not_rated_by(self, user: str) -> List[str]:
+    def _get_item_list_not_rated_by(self, user_name: str) -> List[str]:
         """対象ユーザが未評価であるアイテムのリスト
 
         Args:
-            user (str): 対象ユーザ
+            user_name (str): 対象ユーザ
 
         Returns:
             List[str]: アイテムのリスト
         """
-        ratings = self._get_ratings_for_one_user(user)
+        ratings = self._get_ratings_for_one_user(user_name)
         idx = np.where(ratings == self.missing_value)[0]
         return np.array(self._item_list)[idx].tolist()
 
-    def predict_ratings(self, user: str, based: str) -> Dict[str, float]:
+    def predict_ratings(self, user_name: str, based: str) -> Dict[str, float]:
         """対象ユーザの未評価アイテム集合の評価値を予測
 
         Args:
-            user (str): 対象ユーザ
+            user_name (str): 対象ユーザ
 
         Returns:
             Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
         """
-        item_list = self._get_item_list_not_rated_by(user)
-        user_bias = self._get_average_rating_for_one_user(user)
-        v1 = self._get_ratings_for_one_object('user', user)
+        item_list = self._get_item_list_not_rated_by(user_name)
+        user_bias = self._get_average_rating_for_one_user(user_name)
+        v1 = self._get_ratings_for_one_object('user', user_name)
         ratings = {}
-        print(user)
-        for item in item_list:
-            user_list = self._get_user_who_rated_item(item)
-            print(item, user_list)
+        print(user_name)
+        for item_name in item_list:
+            user_list = self._get_user_who_rated_item(item_name)
+            print(item_name, user_list)
             sum_similarity: float = 0.0
             weighted_sum: float = 0.0
-            for other_user in user_list:  # 定義から、自分自身は含まれない
-                v2 = self._get_ratings_for_one_object('user', other_user)
+            for other_user_name in user_list:  # 定義から、自分自身は含まれない
+                v2 = self._get_ratings_for_one_object('user', other_user_name)
                 similarity = calc_similarity_with_missing_value(v1, v2)
-                rating = self._get_rating(other_user, item)
-                print(other_user, similarity, rating)
+                rating = self._get_rating(other_user_name, item_name)
+                print(other_user_name, similarity, rating)
                 weighted_sum += similarity * rating
                 sum_similarity += abs(similarity)
             score = weighted_sum / sum_similarity
             print(score)
-            ratings[item] = score
+            ratings[item_name] = score
         print(ratings)
         return ratings
 
