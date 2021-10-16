@@ -96,11 +96,32 @@ class Recommendation:
         """
         return self._item_list
 
+    def calc_similarity_with_missing_value_by_name(self, user_name_1: str, user_name_2: str,
+                                                   metric: str = 'euclidean',
+                                                   missing_value: float = 0) -> float:
+        """ユーザのペアから類似度を計算する関数。ベクトルのどちらかに欠損値が含まれる場合、該当idxは無視する。
+
+        Args:
+            user_name_1 (str): 類似度計算対象のユーザ
+            user_name_2 (str): 類似度計算対象のユーザ
+            metric (str, optional): スコア計算のメトリック
+            missing_value (float, optional): 欠損値
+
+        Returns:
+            float: 類似度
+        """
+        v1: float = self._get_ratings_for_one_object('user', user_name_1)
+        v2: float = self._get_ratings_for_one_object('user', user_name_2)
+        sim: float = calc_similarity_with_missing_value(
+            v1, v2, metric, missing_value)
+        return sim
+
     def get_similar_objects(self, object_type: str, object_name: str) -> List[List[Union[str, float]]]:
         """類似度が高いユーザ(アイテム)とその類似度のリストを、類似度の降順に返却する
 
         Args:
-            user (str): 類似リストを取得したいユーザ(アイテム)
+            object_type (str): ユーザかアイテムかを指定
+            object_name (str): 類似リストを取得したいユーザ(アイテム)
 
         Returns:
             List[List[Union[str, float]]]: 類似ユーザ(アイテム)と類似度のリスト
@@ -146,7 +167,6 @@ class Recommendation:
         """
         item_list = self._get_item_list_not_rated_by(user_name)
         user_bias = self._get_average_rating_for_one_user(user_name)
-        v1 = self._get_ratings_for_one_object('user', user_name)
         ratings = {}
         print(user_name)
         for item_name in item_list:
@@ -155,8 +175,8 @@ class Recommendation:
             sum_similarity: float = 0.0
             weighted_sum: float = 0.0
             for other_user_name in user_list:  # 定義から、自分自身は含まれない
-                v2 = self._get_ratings_for_one_object('user', other_user_name)
-                similarity = calc_similarity_with_missing_value(v1, v2)
+                similarity = self.calc_similarity_with_missing_value_by_name(
+                    user_name, other_user_name)
                 rating = self._get_rating(other_user_name, item_name)
                 print(other_user_name, similarity, rating)
                 weighted_sum += similarity * rating
