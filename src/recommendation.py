@@ -96,22 +96,24 @@ class Recommendation:
         """
         return self._item_list
 
-    def calc_similarity_with_missing_value_by_name(self, user_name_1: str, user_name_2: str,
+    def calc_similarity_with_missing_value_by_name(self, object_type, object_name_1: str, object_name_2: str,
                                                    metric: str = 'euclidean',
                                                    missing_value: float = 0) -> float:
-        """ユーザのペアから類似度を計算する関数。ベクトルのどちらかに欠損値が含まれる場合、該当idxは無視する。
+        """ユーザ（アイテム）のペアから類似度を計算する関数。ベクトルのどちらかに欠損値が含まれる場合、該当idxは無視する。
 
         Args:
-            user_name_1 (str): 類似度計算対象のユーザ
-            user_name_2 (str): 類似度計算対象のユーザ
+            user_name_1 (str): 類似度計算対象のユーザ（アイテム）
+            user_name_2 (str): 類似度計算対象のユーザ（アイテム）
             metric (str, optional): スコア計算のメトリック
             missing_value (float, optional): 欠損値
 
         Returns:
             float: 類似度
         """
-        v1: float = self._get_ratings_for_one_object('user', user_name_1)
-        v2: float = self._get_ratings_for_one_object('user', user_name_2)
+        v1: float = self._get_ratings_for_one_object(
+            object_type, object_name_1)
+        v2: float = self._get_ratings_for_one_object(
+            object_type, object_name_2)
         sim: float = calc_similarity_with_missing_value(
             v1, v2, metric, missing_value)
         return sim
@@ -176,7 +178,7 @@ class Recommendation:
             weighted_sum: float = 0.0
             for other_user_name in user_list:  # 定義から、自分自身は含まれない
                 similarity = self.calc_similarity_with_missing_value_by_name(
-                    user_name, other_user_name)
+                    'user', user_name, other_user_name)
                 rating = self._get_rating(other_user_name, item_name)
                 print(other_user_name, similarity, rating)
                 weighted_sum += similarity * rating
