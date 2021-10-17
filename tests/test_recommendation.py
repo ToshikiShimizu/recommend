@@ -122,3 +122,10 @@ def test__get_rating(recommendation_fixture):
         for user_name in user_list:
             rating = recommendation_fixture._get_rating(user_name, item_name)
             assert 1.0 <= rating <= 5.0
+
+
+def test_calc_similarity_with_missing_value_by_name(recommendation_fixture):
+    user_list = recommendation_fixture.get_user_list()
+    similarity = recommendation_fixture.calc_similarity_with_missing_value_by_name(
+        'user', user_list[0], user_list[-1])
+    assert -1.0 <= similarity <= 1.0
