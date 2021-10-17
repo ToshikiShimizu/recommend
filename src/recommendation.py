@@ -193,7 +193,10 @@ class Recommendation:
         Returns:
             float: 平均評価値
         """
-        return self._get_ratings_for_one_user(user_name).mean()
+        array = self._get_ratings_for_one_user(user_name)
+        if len(array) == 0:
+            raise Exception("There is no item evaluated by the target user.")
+        return array.mean()
 
     def _get_average_rating_for_one_item(self, item_name: str) -> float:
         """対象アイテムの平均評価値を計算する
@@ -204,7 +207,10 @@ class Recommendation:
         Returns:
             float: 平均評価値
         """
-        return self._get_ratings_for_one_item(item_name).mean()
+        array = self._get_ratings_for_one_item(item_name)
+        if len(array) == 0:
+            raise Exception("No user has evaluated the target item.")
+        return array.mean()
 
     def _get_user_who_rated_item(self, item_name: str) -> List[str]:
         """対象アイテムを評価したユーザのリスト
