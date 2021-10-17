@@ -230,3 +230,20 @@ class Recommendation:
             float: 評価値
         """
         return self.ratings_dict[user_name][item_name]
+
+    def get_recommendations(self, user_name: str, based: str = 'user', top_n: int = 0) -> List[str]:
+        """予測評価値を利用して、ユーザに対する推薦リストを提示する関数
+
+        Args:
+            user_name (str): 対象ユーザ
+            based ([str], optional): ユーザまたはアイテム
+
+        Returns:
+            List[str]: 予測評価値で降順ソートされたアイテムのリスト
+        """
+        ratings = self.predict_ratings(user_name, based)
+        sorted_items = [k for k, _ in sorted(
+            ratings.items(), key=lambda ratings: ratings[1], reverse=True)]
+        if top_n != 0 and len(sorted_items) > top_n:
+            sorted_items = sorted_items[:top_n]
+        return sorted_items
