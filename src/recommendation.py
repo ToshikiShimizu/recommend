@@ -170,23 +170,18 @@ class Recommendation:
         item_list = self._get_item_list_not_rated_by(user_name)
         user_bias = self._get_average_rating_for_one_user(user_name)
         ratings = {}
-        print(user_name)
         for item_name in item_list:
             user_list = self._get_user_who_rated_item(item_name)
-            print(item_name, user_list)
             sum_similarity: float = 0.0
             weighted_sum: float = 0.0
             for other_user_name in user_list:  # 定義から、自分自身は含まれない
                 similarity = self.calc_similarity_with_missing_value_by_name(
                     'user', user_name, other_user_name)
                 rating = self._get_rating(other_user_name, item_name)
-                print(other_user_name, similarity, rating)
                 weighted_sum += similarity * rating
                 sum_similarity += abs(similarity)
             score = weighted_sum / sum_similarity
-            print(score)
             ratings[item_name] = score
-        print(ratings)
         return ratings
 
     def _get_average_rating_for_one_user(self, user_name: str) -> float:
