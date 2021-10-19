@@ -158,7 +158,7 @@ class Recommendation:
         idx = np.where(ratings == self.missing_value)[0]
         return np.array(self._item_list)[idx].tolist()
 
-    def predict_ratings(self, user_name: str, based: str) -> Dict[str, float]:
+    def predict_ratings(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
         """対象ユーザの未評価アイテム集合の評価値を予測
 
         Args:
@@ -168,7 +168,7 @@ class Recommendation:
             Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
         """
         item_list = self._get_item_list_not_rated_by(user_name)
-        user_bias = self._get_average_rating_for_one_user(user_name)
+        user_bias = self._get_average_rating_for_one_user(user_name) if debiasing else 0.0
         ratings = {}
         for item_name in item_list:
             user_list = self._get_user_who_rated_item(item_name)
@@ -178,9 +178,11 @@ class Recommendation:
                 similarity = self.calc_similarity_with_missing_value_by_name(
                     'user', user_name, other_user_name)
                 rating = self._get_rating(other_user_name, item_name)
+                if debiasing:
+                    rating -= self._get_average_rating_for_one_user(other_user_name)
                 weighted_sum += similarity * rating
                 sum_similarity += abs(similarity)
-            score = weighted_sum / sum_similarity
+            score = user_bias + weighted_sum / sum_similarity
             ratings[item_name] = score
         return ratings
 

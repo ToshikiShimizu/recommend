@@ -95,6 +95,8 @@ def test_predict_ratings(recommendation_fixture):
     recommendations = recommendation_fixture.predict_ratings(
         user_name, based='user')
     assert 'Just My Luck' in recommendations
+    for rating in recommendations.values():
+        assert 1.0 <= rating <= 5.0
 
 
 def test__get_average_rating_for_one_user(recommendation_fixture):
