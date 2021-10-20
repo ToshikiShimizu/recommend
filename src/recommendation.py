@@ -168,8 +168,9 @@ class Recommendation:
             Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
         """
         item_list = self._get_item_list_not_rated_by(user_name)
-        user_bias = self._get_average_rating_for_one_user(user_name) if debiasing else 0.0
-        ratings = {}
+        user_bias = self._get_average_rating_for_one_user(
+            user_name) if debiasing else 0.0
+        predictions = {}
         for item_name in item_list:
             user_list = self._get_user_who_rated_item(item_name)
             sum_similarity: float = 0.0
@@ -179,12 +180,15 @@ class Recommendation:
                     'user', user_name, other_user_name)
                 rating = self._get_rating(other_user_name, item_name)
                 if debiasing:
-                    rating -= self._get_average_rating_for_one_user(other_user_name)
+                    rating -= self._get_average_rating_for_one_user(
+                        other_user_name)
                 weighted_sum += similarity * rating
                 sum_similarity += abs(similarity)
-            score = user_bias + weighted_sum / sum_similarity
-            ratings[item_name] = score
-        return ratings
+            prediction: float = user_bias
+            if sum_similarity != 0.0:
+                prediction += weighted_sum / sum_similarity
+            predictions[item_name] = prediction
+        return predictions
 
     def _get_average_rating_for_one_user(self, user_name: str) -> float:
         """対象ユーザの評価済みアイテムの平均評価値を計算する
