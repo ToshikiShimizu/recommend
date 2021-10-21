@@ -96,23 +96,24 @@ class Recommendation:
         """
         return self._item_list
 
-    def calc_similarity_with_missing_value_by_name(self, object_type, object_name_1: str, object_name_2: str,
+    def calc_similarity_with_missing_value_by_name(self, object_type: str, object_name_1: str, object_name_2: str,
                                                    metric: str = 'euclidean',
                                                    missing_value: float = 0) -> float:
         """ユーザ（アイテム）のペアから類似度を計算する関数。ベクトルのどちらかに欠損値が含まれる場合、該当idxは無視する。
 
         Args:
-            user_name_1 (str): 類似度計算対象のユーザ（アイテム）
-            user_name_2 (str): 類似度計算対象のユーザ（アイテム）
+            object_type (str): user or item
+            object_name_1 (str): 類似度計算対象のユーザ（アイテム）
+            object_name_2 (str): 類似度計算対象のユーザ（アイテム）
             metric (str, optional): スコア計算のメトリック
             missing_value (float, optional): 欠損値
 
         Returns:
             float: 類似度
         """
-        v1: float = self._get_ratings_for_one_object(
+        v1: np.ndarray = self._get_ratings_for_one_object(
             object_type, object_name_1)
-        v2: float = self._get_ratings_for_one_object(
+        v2: np.ndarray = self._get_ratings_for_one_object(
             object_type, object_name_2)
         sim: float = calc_similarity_with_missing_value(
             v1, v2, metric, missing_value)
@@ -163,6 +164,8 @@ class Recommendation:
 
         Args:
             user_name (str): 対象ユーザ
+            based (str): user or item
+            debiasing (bool, optional): バイアス除去フラグ
 
         Returns:
             Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
@@ -208,7 +211,7 @@ class Recommendation:
         """対象アイテムの平均評価値を計算する
 
         Args:
-            user_name (str): 対象ユーザ
+            item_name (str): 対象アイテム
 
         Returns:
             float: 平均評価値
@@ -249,6 +252,7 @@ class Recommendation:
         Args:
             user_name (str): 対象ユーザ
             based ([str], optional): ユーザまたはアイテム
+            top_n (int, optional): 上位n件のみを取得
 
         Returns:
             List[str]: 予測評価値で降順ソートされたアイテムのリスト
