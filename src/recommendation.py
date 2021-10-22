@@ -1,8 +1,8 @@
 import numpy as np
 from typing import Union, List, Dict
-from ratings_data import ratings
 from similarity import calc_similarity_with_missing_value
 import dataclasses
+import json
 
 
 @dataclasses.dataclass
@@ -17,8 +17,8 @@ class Recommendation:
         """
         user_set = set()
         item_set = set()
-
-        # ratingsはimportが必要な関数で、辞書を返す
+        with open('data/ratings.json') as f:
+            ratings = json.load(f)
         for user_k, user_v in ratings.items():
             user_set.add(user_k)
             for item_k, item_v in user_v.items():
