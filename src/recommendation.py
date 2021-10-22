@@ -7,17 +7,23 @@ import json
 
 @dataclasses.dataclass
 class Recommendation:
-    missing_value: float = 0
+    missing_value: float = 0.0
+    file_name: str = 'data/ratings.json'
+    file_format: str = 'json'
 
     def __post_init__(self):
         self._load_ratings()
 
     def _load_ratings(self):
+        if self.file_format == 'json':
+            return self._load_ratings_json()
+
+    def _load_ratings_json(self):
         """ratingsをロードし、user-item行列、辞書を作成する
         """
         user_set = set()
         item_set = set()
-        with open('data/ratings.json') as f:
+        with open(self.file_name) as f:
             ratings = json.load(f)
         for user_k, user_v in ratings.items():
             user_set.add(user_k)
