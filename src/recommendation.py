@@ -223,8 +223,6 @@ class Recommendation:
             float: 平均評価値
         """
         array = self._get_ratings_for_one_item(item_name)
-        if len(array) == 0:
-            raise Exception("No user has evaluated the target item.")
         return array.mean()
 
     def _get_user_who_rated_item(self, item_name: str) -> List[str]:

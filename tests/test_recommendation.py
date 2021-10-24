@@ -9,6 +9,13 @@ def recommendation_fixture():
     return recommendation
 
 
+@pytest.fixture
+def recommendation_fixture_special_user():
+    # 評価したアイテムが1つもないユーザのみのデータ
+    recommendation = Recommendation(file_name='data/ratings_special_user.json')
+    return recommendation
+
+
 def test__load_ratings(recommendation_fixture):
     assert recommendation_fixture.matrix.shape[0] == len(
         recommendation_fixture._user_dic)
@@ -99,10 +106,14 @@ def test_predict_ratings(recommendation_fixture):
         assert 1.0 <= rating <= 5.0
 
 
-def test__get_average_rating_for_one_user(recommendation_fixture):
+def test__get_average_rating_for_one_user(recommendation_fixture, recommendation_fixture_special_user):
     user_name = recommendation_fixture.get_user_list()[0]
     rating = recommendation_fixture._get_average_rating_for_one_user(user_name)
     assert 1.0 <= rating <= 5.0
+    with pytest.raises(Exception):
+        user_name = recommendation_fixture_special_user.get_user_list()[0]
+        recommendation_fixture_special_user._get_average_rating_for_one_user(
+            user_name)
 
 
 def test__get_average_rating_for_one_item(recommendation_fixture):
