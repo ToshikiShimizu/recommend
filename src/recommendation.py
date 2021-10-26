@@ -200,7 +200,12 @@ class Recommendation:
                 predictions[item_name] = prediction
             return predictions
         elif based == 'item':
-            pass
+            unrated_item_list = self._get_item_list_not_rated_by(user_name)
+            rated_item_list = self._get_item_list_rated_by(user_name)
+            predictions = {}
+            for unrated_item_name in unrated_item_list:
+                for rated_item_name in rated_item_list:
+                    pass
 
     def _get_average_rating_for_one_user(self, user_name: str) -> float:
         """対象ユーザの評価済みアイテムの平均評価値を計算する
