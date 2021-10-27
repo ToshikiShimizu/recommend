@@ -84,7 +84,21 @@ def test__get_item_list_not_rated_by(recommendation_fixture):
     ratings = recommendation_fixture._get_ratings_for_one_user(user_name)
     not_rated_item_idx = [recommendation_fixture._item_dic[k]
                           for k in not_rated_item_list]
-    assert np.array(ratings)[not_rated_item_idx].sum() == 0
+
+    assert np.all(np.array(ratings)[not_rated_item_idx]
+                  == recommendation_fixture.missing_value)
+
+
+def test__get_item_list_rated_by(recommendation_fixture):
+    user_name = recommendation_fixture.get_user_list()[0]
+    rated_item_list = recommendation_fixture._get_item_list_rated_by(
+        user_name)
+    assert isinstance(rated_item_list, list)  # list
+    ratings = recommendation_fixture._get_ratings_for_one_user(user_name)
+    rated_item_idx = [recommendation_fixture._item_dic[k]
+                      for k in rated_item_list]
+    assert np.all(np.array(ratings)[rated_item_idx]
+                  != recommendation_fixture.missing_value)
 
 
 def test_get_recommendations(recommendation_fixture):
