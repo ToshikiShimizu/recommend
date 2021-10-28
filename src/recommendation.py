@@ -165,6 +165,19 @@ class Recommendation:
         idx = np.where(ratings == self.missing_value)[0]
         return np.array(self._item_list)[idx].tolist()
 
+    def _get_item_list_rated_by(self, user_name: str) -> List[str]:
+        """対象ユーザが評価済みであるアイテムのリスト
+
+        Args:
+            user_name (str): 対象ユーザ
+
+        Returns:
+            List[str]: アイテムのリスト
+        """
+        ratings = self._get_ratings_for_one_user(user_name)
+        idx = np.where(ratings != self.missing_value)[0]
+        return np.array(self._item_list)[idx].tolist()
+
     def predict_ratings(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
         """対象ユーザの未評価アイテム集合の評価値を予測
 
