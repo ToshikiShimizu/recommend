@@ -217,15 +217,20 @@ class Recommendation:
             rated_item_list = self._get_item_list_rated_by(user_name)
             predictions = {}
             for unrated_item_name in unrated_item_list:
+                item_bias = self._get_average_rating_for_one_item(
+                    unrated_item_name) if debiasing else 0.0
                 sum_similarity: float = 0.0
                 weighted_sum: float = 0.0
                 for rated_item_name in rated_item_list:
                     similarity = self.calc_similarity_with_missing_value_by_name(
                         'item', unrated_item_name, rated_item_name)
                     rating = self._get_rating(user_name, rated_item_name)
+                    if debiasing:
+                        rating -= self._get_average_rating_for_one_item(
+                            rated_item_name)
                     weighted_sum += similarity * rating
                     sum_similarity += abs(similarity)
-                prediction: float = 0
+                prediction: float = item_bias
                 if sum_similarity != 0.0:
                     prediction += weighted_sum / sum_similarity
                 predictions[unrated_item_name] = prediction
