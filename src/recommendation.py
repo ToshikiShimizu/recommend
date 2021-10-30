@@ -189,19 +189,20 @@ class Recommendation:
         Returns:
             Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
         """
+        predictions = {}
+        unrated_item_list = self._get_item_list_not_rated_by(user_name)
         if based == 'user':
-            item_list = self._get_item_list_not_rated_by(user_name)
             user_bias = self._get_average_rating_for_one_user(
                 user_name) if debiasing else 0.0
-            predictions = {}
-            for item_name in item_list:
-                user_list = self._get_user_who_rated_item(item_name)
+            for unrated_item_name in unrated_item_list:
+                user_list = self._get_user_who_rated_item(unrated_item_name)
                 sum_similarity: float = 0.0
                 weighted_sum: float = 0.0
                 for other_user_name in user_list:  # 定義から、自分自身は含まれない
                     similarity = self.calc_similarity_with_missing_value_by_name(
                         'user', user_name, other_user_name)
-                    rating = self._get_rating(other_user_name, item_name)
+                    rating = self._get_rating(
+                        other_user_name, unrated_item_name)
                     if debiasing:
                         rating -= self._get_average_rating_for_one_user(
                             other_user_name)
@@ -210,12 +211,9 @@ class Recommendation:
                 prediction: float = user_bias
                 if sum_similarity != 0.0:
                     prediction += weighted_sum / sum_similarity
-                predictions[item_name] = prediction
-            return predictions
+                predictions[unrated_item_name] = prediction
         elif based == 'item':
-            unrated_item_list = self._get_item_list_not_rated_by(user_name)
             rated_item_list = self._get_item_list_rated_by(user_name)
-            predictions = {}
             for unrated_item_name in unrated_item_list:
                 item_bias = self._get_average_rating_for_one_item(
                     unrated_item_name) if debiasing else 0.0
@@ -234,7 +232,7 @@ class Recommendation:
                 if sum_similarity != 0.0:
                     prediction += weighted_sum / sum_similarity
                 predictions[unrated_item_name] = prediction
-            return predictions
+        return predictions
 
     def _get_average_rating_for_one_user(self, user_name: str) -> float:
         """対象ユーザの評価済みアイテムの平均評価値を計算する
