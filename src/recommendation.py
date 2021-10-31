@@ -302,3 +302,18 @@ class Recommendation:
         if top_n != 0 and len(sorted_items) > top_n:
             sorted_items = sorted_items[:top_n]
         return sorted_items
+
+
+
+    def predict_ratings_with_baseline_estimation(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
+        # muの計算
+        ratings = []
+        user_list = self.get_user_list()
+        for user_name in user_list:
+            item_list = self._get_item_list_rated_by(user_name)
+            for item_name in item_list:
+                rating = self._get_rating(user_name, item_name)
+                print(user_name, item_name, rating)
+                ratings.append(rating)
+        mu = np.mean(ratings)
+        print(mu)
