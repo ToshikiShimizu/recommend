@@ -1,6 +1,7 @@
 import numpy as np
 from recommendation import Recommendation
 import pytest
+import math
 
 
 @pytest.fixture
@@ -179,3 +180,10 @@ def test_predict_ratings_with_baseline_estimation(recommendation_fixture):
     assert 'Just My Luck' in recommendations
     for rating in recommendations.values():
         assert 1.0 <= rating <= 5.0
+
+
+def test__calculate_average_ratings(recommendation_fixture, recommendation_fixture_special_user):
+    mu = recommendation_fixture._calculate_average_ratings()
+    assert 1.0 <= mu <= 5.0
+    with pytest.raises(Exception):
+        recommendation_fixture_special_user._calculate_average_ratings()

@@ -304,9 +304,12 @@ class Recommendation:
         return sorted_items
 
 
+    def _calculate_average_ratings(self) -> float:
+        """全ユーザ・全アイテムの評価値の平均を計算し、返却する関数
 
-    def predict_ratings_with_baseline_estimation(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
-        # muの計算
+        Returns:
+            float: 平均評価値
+        """
         ratings = []
         user_list = self.get_user_list()
         for user_name in user_list:
@@ -315,5 +318,12 @@ class Recommendation:
                 rating = self._get_rating(user_name, item_name)
                 print(user_name, item_name, rating)
                 ratings.append(rating)
+        if len(ratings) == 0:
+            raise Exception("The average cannot be calculated because there is no rating.")
         mu = np.mean(ratings)
+        return mu
+
+
+    def predict_ratings_with_baseline_estimation(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
+        mu = self._calculate_average_ratings()
         print(mu)
