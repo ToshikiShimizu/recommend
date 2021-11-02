@@ -52,25 +52,25 @@ def test__get_ratings_for_one_object(recommendation_fixture):
     assert (expected == results).all()
 
 
-def test_get_user_list(recommendation_fixture):
-    assert isinstance(recommendation_fixture.get_user_list(), list)
+def test__get_user_list(recommendation_fixture):
+    assert isinstance(recommendation_fixture._get_user_list(), list)
 
 
-def test_get_item_list(recommendation_fixture):
-    assert isinstance(recommendation_fixture.get_item_list(), list)
+def test__get_item_list(recommendation_fixture):
+    assert isinstance(recommendation_fixture._get_item_list(), list)
 
 
-def test_get_similar_objects(recommendation_fixture):
+def test__get_similar_objects(recommendation_fixture):
     # user
-    user_name = recommendation_fixture.get_user_list()[0]
-    user_sim = recommendation_fixture.get_similar_objects('user', user_name)
+    user_name = recommendation_fixture._get_user_list()[0]
+    user_sim = recommendation_fixture._get_similar_objects('user', user_name)
     assert isinstance(user_sim[0], list)
     assert isinstance(user_sim[0][0], str)
     assert isinstance(user_sim[0][1], float)
     assert user_sim[0][1] >= user_sim[-1][1]
     # item
-    item_name = recommendation_fixture.get_item_list()[0]
-    item_sim = recommendation_fixture.get_similar_objects('item', item_name)
+    item_name = recommendation_fixture._get_item_list()[0]
+    item_sim = recommendation_fixture._get_similar_objects('item', item_name)
     assert isinstance(item_sim[0], list)
     assert isinstance(item_sim[0][0], str)
     assert isinstance(item_sim[0][1], float)
@@ -78,7 +78,7 @@ def test_get_similar_objects(recommendation_fixture):
 
 
 def test__get_item_list_not_rated_by(recommendation_fixture):
-    user_name = recommendation_fixture.get_user_list()[0]
+    user_name = recommendation_fixture._get_user_list()[0]
     not_rated_item_list = recommendation_fixture._get_item_list_not_rated_by(
         user_name)
     assert isinstance(not_rated_item_list, list)  # list
@@ -91,7 +91,7 @@ def test__get_item_list_not_rated_by(recommendation_fixture):
 
 
 def test__get_item_list_rated_by(recommendation_fixture):
-    user_name = recommendation_fixture.get_user_list()[0]
+    user_name = recommendation_fixture._get_user_list()[0]
     rated_item_list = recommendation_fixture._get_item_list_rated_by(
         user_name)
     assert isinstance(rated_item_list, list)  # list
@@ -103,7 +103,7 @@ def test__get_item_list_rated_by(recommendation_fixture):
 
 
 def test_get_recommendations(recommendation_fixture):
-    user_name = recommendation_fixture.get_user_list()[4]
+    user_name = recommendation_fixture._get_user_list()[4]
     recommendations = recommendation_fixture.get_recommendations(
         user_name, based='user')
     assert isinstance(recommendations, list)  # list
@@ -128,23 +128,23 @@ def test_predict_ratings(recommendation_fixture):
 
 
 def test__get_average_rating_for_one_user(recommendation_fixture, recommendation_fixture_special_user):
-    user_name = recommendation_fixture.get_user_list()[0]
+    user_name = recommendation_fixture._get_user_list()[0]
     rating = recommendation_fixture._get_average_rating_for_one_user(user_name)
     assert 1.0 <= rating <= 5.0
     with pytest.raises(Exception):
-        user_name = recommendation_fixture_special_user.get_user_list()[0]
+        user_name = recommendation_fixture_special_user._get_user_list()[0]
         recommendation_fixture_special_user._get_average_rating_for_one_user(
             user_name)
 
 
 def test__get_average_rating_for_one_item(recommendation_fixture):
-    item_name = recommendation_fixture.get_item_list()[0]
+    item_name = recommendation_fixture._get_item_list()[0]
     rating = recommendation_fixture._get_average_rating_for_one_item(item_name)
     assert 1.0 <= rating <= 5.0
 
 
 def test__get_user_who_rated_item(recommendation_fixture):
-    item_list = recommendation_fixture.get_item_list()
+    item_list = recommendation_fixture._get_item_list()
     for item_name in item_list:
         user_list = recommendation_fixture._get_user_who_rated_item(item_name)
         assert isinstance(user_list, list)
@@ -152,7 +152,7 @@ def test__get_user_who_rated_item(recommendation_fixture):
 
 
 def test__get_rating(recommendation_fixture):
-    item_list = recommendation_fixture.get_item_list()
+    item_list = recommendation_fixture._get_item_list()
     for item_name in item_list:
         user_list = recommendation_fixture._get_user_who_rated_item(item_name)
         for user_name in user_list:
@@ -160,9 +160,9 @@ def test__get_rating(recommendation_fixture):
             assert 1.0 <= rating <= 5.0
 
 
-def test_calc_similarity_with_missing_value_by_name(recommendation_fixture):
-    user_list = recommendation_fixture.get_user_list()
-    similarity = recommendation_fixture.calc_similarity_with_missing_value_by_name(
+def test__calc_similarity_with_missing_value_by_name(recommendation_fixture):
+    user_list = recommendation_fixture._get_user_list()
+    similarity = recommendation_fixture._calc_similarity_with_missing_value_by_name(
         'user', user_list[0], user_list[-1])
     assert -1.0 <= similarity <= 1.0
 

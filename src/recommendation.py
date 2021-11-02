@@ -86,7 +86,7 @@ class Recommendation:
         elif object_type == 'item':
             return self._get_ratings_for_one_item(object_name)
 
-    def get_user_list(self) -> List[str]:
+    def _get_user_list(self) -> List[str]:
         """ユーザリストを返却する
 
         Returns:
@@ -94,7 +94,7 @@ class Recommendation:
         """
         return self._user_list
 
-    def get_item_list(self) -> List[str]:
+    def _get_item_list(self) -> List[str]:
         """アイテムリストを返却する
 
         Returns:
@@ -102,9 +102,9 @@ class Recommendation:
         """
         return self._item_list
 
-    def calc_similarity_with_missing_value_by_name(self, object_type: str, object_name_1: str, object_name_2: str,
-                                                   metric: str = 'euclidean',
-                                                   missing_value: float = 0) -> float:
+    def _calc_similarity_with_missing_value_by_name(self, object_type: str, object_name_1: str, object_name_2: str,
+                                                    metric: str = 'euclidean',
+                                                    missing_value: float = 0) -> float:
         """ユーザ（アイテム）のペアから類似度を計算する関数。ベクトルのどちらかに欠損値が含まれる場合、該当idxは無視する。
 
         Args:
@@ -125,7 +125,7 @@ class Recommendation:
             v1, v2, metric, missing_value)
         return sim
 
-    def get_similar_objects(self, object_type: str, object_name: str) -> List[List[Union[str, float]]]:
+    def _get_similar_objects(self, object_type: str, object_name: str) -> List[List[Union[str, float]]]:
         """類似度が高いユーザ(アイテム)とその類似度のリストを、類似度の降順に返却する
 
         Args:
@@ -138,9 +138,9 @@ class Recommendation:
         v1 = self._get_ratings_for_one_object(object_type, object_name)
         sim_list = []
         if object_type == 'user':
-            object_list = self.get_user_list()
+            object_list = self._get_user_list()
         elif object_type == 'item':
-            object_list = self.get_item_list()
+            object_list = self._get_item_list()
         for key in object_list:
             v2 = self._get_ratings_for_one_object(object_type, key)
             sim = calc_similarity_with_missing_value(
@@ -199,7 +199,7 @@ class Recommendation:
                 sum_similarity: float = 0.0
                 weighted_sum: float = 0.0
                 for other_user_name in user_list:  # 定義から、自分自身は含まれない
-                    similarity = self.calc_similarity_with_missing_value_by_name(
+                    similarity = self._calc_similarity_with_missing_value_by_name(
                         'user', user_name, other_user_name)
                     rating = self._get_rating(
                         other_user_name, unrated_item_name)
@@ -220,7 +220,7 @@ class Recommendation:
                 sum_similarity: float = 0.0
                 weighted_sum: float = 0.0
                 for rated_item_name in rated_item_list:
-                    similarity = self.calc_similarity_with_missing_value_by_name(
+                    similarity = self._calc_similarity_with_missing_value_by_name(
                         'item', unrated_item_name, rated_item_name)
                     rating = self._get_rating(user_name, rated_item_name)
                     if debiasing:
@@ -303,7 +303,6 @@ class Recommendation:
             sorted_items = sorted_items[:top_n]
         return sorted_items
 
-
     def _calculate_average_ratings(self) -> float:
         """全ユーザ・全アイテムの評価値の平均を計算し、返却する関数
 
@@ -311,7 +310,7 @@ class Recommendation:
             float: 平均評価値
         """
         ratings = []
-        user_list = self.get_user_list()
+        user_list = self._get_user_list()
         for user_name in user_list:
             item_list = self._get_item_list_rated_by(user_name)
             for item_name in item_list:
@@ -319,10 +318,10 @@ class Recommendation:
                 print(user_name, item_name, rating)
                 ratings.append(rating)
         if len(ratings) == 0:
-            raise Exception("The average cannot be calculated because there is no rating.")
+            raise Exception(
+                "The average cannot be calculated because there is no rating.")
         mu = np.mean(ratings)
         return mu
-
 
     def predict_ratings_with_baseline_estimation(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
         mu = self._calculate_average_ratings()
