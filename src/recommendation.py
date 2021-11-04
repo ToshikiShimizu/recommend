@@ -315,7 +315,6 @@ class Recommendation:
             item_list = self._get_item_list_rated_by(user_name)
             for item_name in item_list:
                 rating = self._get_rating(user_name, item_name)
-                print(user_name, item_name, rating)
                 ratings.append(rating)
         if len(ratings) == 0:
             raise Exception(
@@ -323,6 +322,18 @@ class Recommendation:
         mu = np.mean(ratings)
         return mu
 
-    def predict_ratings_with_baseline_estimation(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
+    def predict_ratings_with_baseline_estimation(self, user_name: str) -> Dict[str, float]:
+        """対象ユーザの未評価アイテム集合の評価値をベースライン推定
+
+        Args:
+            user_name (str): 対象ユーザ
+        Returns:
+            Dict[str, float]: 未評価のアイテム集合とそれらの予測評価値
+        """
         mu = self._calculate_average_ratings()
         print(mu)
+        unrated_item_list = self._get_item_list_not_rated_by(user_name)
+        for unrated_item_name in unrated_item_list:
+            bias_item = self._get_average_rating_for_one_item(
+                unrated_item_name) - mu
+            print(bias_item)
