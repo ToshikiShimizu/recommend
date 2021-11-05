@@ -112,15 +112,15 @@ def test_get_recommendations(recommendation_fixture):
     assert len(recommendations) == 1
 
 
-def test_predict_ratings(recommendation_fixture):
+def test__predict_ratings(recommendation_fixture):
     user_name = 'Michael Phillips'
-    recommendations = recommendation_fixture.predict_ratings(
+    recommendations = recommendation_fixture._predict_ratings(
         user_name, based='user')
     assert 'Just My Luck' in recommendations
     for rating in recommendations.values():
         assert 1.0 <= rating <= 5.0
     user_name = 'Michael Phillips'
-    recommendations = recommendation_fixture.predict_ratings(
+    recommendations = recommendation_fixture._predict_ratings(
         user_name, based='item')
     assert 'Just My Luck' in recommendations
     for rating in recommendations.values():
@@ -167,15 +167,15 @@ def test__calc_similarity_with_missing_value_by_name(recommendation_fixture):
     assert -1.0 <= similarity <= 1.0
 
 
-def test_predict_ratings_with_baseline_estimation(recommendation_fixture):
+def test__predict_ratings_with_baseline_estimation(recommendation_fixture):
     user_name = 'Michael Phillips'
-    recommendations = recommendation_fixture.predict_ratings_with_baseline_estimation(
+    recommendations = recommendation_fixture._predict_ratings_with_baseline_estimation(
         user_name, based='user')
     assert 'Just My Luck' in recommendations
     for rating in recommendations.values():
         assert 1.0 <= rating <= 5.0
     user_name = 'Michael Phillips'
-    recommendations = recommendation_fixture.predict_ratings_with_baseline_estimation(
+    recommendations = recommendation_fixture._predict_ratings_with_baseline_estimation(
         user_name, based='item')
     assert 'Just My Luck' in recommendations
     for rating in recommendations.values():

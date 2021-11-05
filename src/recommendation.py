@@ -178,7 +178,7 @@ class Recommendation:
         idx = np.where(ratings != self.missing_value)[0]
         return np.array(self._item_list)[idx].tolist()
 
-    def predict_ratings(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
+    def _predict_ratings(self, user_name: str, based: str, debiasing: bool = True) -> Dict[str, float]:
         """対象ユーザの未評価アイテム集合の評価値を予測
 
         Args:
@@ -296,7 +296,7 @@ class Recommendation:
         Returns:
             List[str]: 予測評価値で降順ソートされたアイテムのリスト
         """
-        ratings = self.predict_ratings(user_name, based)
+        ratings = self._predict_ratings(user_name, based)
         sorted_items = [k for k, _ in sorted(
             ratings.items(), key=lambda ratings: ratings[1], reverse=True)]
         if top_n != 0 and len(sorted_items) > top_n:
@@ -322,7 +322,7 @@ class Recommendation:
         mu = np.mean(ratings)
         return mu
 
-    def predict_ratings_with_baseline_estimation(self, user_name: str) -> Dict[str, float]:
+    def _predict_ratings_with_baseline_estimation(self, user_name: str) -> Dict[str, float]:
         """対象ユーザの未評価アイテム集合の評価値をベースライン推定
 
         Args:
